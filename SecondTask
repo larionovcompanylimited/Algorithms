@@ -1,0 +1,101 @@
+//#2
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func mergeArrays(arrays: [[Int]]) -> [Int] {
+    guard !arrays.isEmpty else {
+        return []
+    }
+
+    var sortedArrayResult = arrays[0]
+
+    for i in 1..<arrays.count {
+        sortedArrayResult = makeSortedArrays(sortedArrayResult: sortedArrayResult,
+                                             compareArraysWithCurrent: arrays[i])
+    }
+
+    return sortedArrayResult
+}
+
+func makeSortedArrays(sortedArrayResult: [Int], compareArraysWithCurrent: [Int]) -> [Int] {
+    var resultArray = [Int]()
+    var resultIndex = 0
+    var compareIndex = 0
+
+    while resultIndex < sortedArrayResult.count && compareIndex < compareArraysWithCurrent.count {
+        if sortedArrayResult[resultIndex] < compareArraysWithCurrent[compareIndex] {
+            resultArray.append(sortedArrayResult[resultIndex])
+            resultIndex += 1
+        } else {
+            resultArray.append(compareArraysWithCurrent[compareIndex])
+            compareIndex += 1
+        }
+    }
+
+    while resultIndex < sortedArrayResult.count {
+        resultArray.append(sortedArrayResult[resultIndex])
+        resultIndex += 1
+    }
+
+    while compareIndex < compareArraysWithCurrent.count {
+        resultArray.append(compareArraysWithCurrent[compareIndex])
+        compareIndex += 1
+    }
+
+    return resultArray
+}
+
+let arr1 = [7, 7, 7]
+let arr2 = [2, 4, 6]
+let arr3 = [0, 7, 8]
+let arr4 = [4, 6, 9]
+let arr5 = [0, 10, 11]
+let arr6 = [14, 20, 22]
+let arr7 = [11, 15, 21]
+let arr8 = [13, 16, 19]
+
+let mergedArray = mergeArrays(arrays: [arr1, arr2, arr3, arr4, arr5, arr6, arr7, arr8])
+print(mergedArray)
+
+//Пространственная сложность O(N) - где N суммарная длина всех массивов, где создаестся самый большой массив resultArray который хранит и объединяет результат всех входных массивов
+//Временная сложность O(N*M) - где N - количество входных массивов, M - суммарная длина всех входных массив
+
+
+//Это первое решение, можно сократить время выполнения без вложенных циклов, что позволит сократить время выполнения, но пространственная и временная сложность останутся такими же
+
+func combineArrays(arrays: [[Int]]) -> [Int] {
+    let count = arrays.reduce(0) { $0 + $1.count }
+    if count == 0 {
+        return []
+    }
+
+    var result = Array(repeating: 0, count: count)
+    var indices = Array(repeating: 0, count: arrays.count)
+
+    for i in 0..<count {
+        var minIndex = -1
+        var minValue = Int.max
+
+        for j in 0..<arrays.count {
+            if indices[j] < arrays[j].count && arrays[j][indices[j]] < minValue {
+                minIndex = j
+                minValue = arrays[j][indices[j]]
+            }
+        }
+
+        result[i] = minValue
+        indices[minIndex] += 1
+    }
+
+    return result
+}
+
+let mas1 = [7, 7, 7]
+let mas2 = [2, 4, 6]
+let mas3 = [0, 7, 8]
+let mas4 = [4, 6, 9]
+let mas5 = [0, 10, 11]
+let mas6 = [14, 20, 22]
+let mas7 = [11, 15, 21]
+let mas8 = [13, 16, 19]
+
+let combineArray = combineArrays(arrays: [mas1, mas2, mas3, mas4, mas5, mas6, mas7, mas8])
+print(combineArray)
